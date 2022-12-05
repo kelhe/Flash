@@ -7,13 +7,13 @@ import NotFound from "./NotFound";
 import DecksPage from "./DecksPage"
 
 function Layout() {
-  const abortController = new AbortController();
   const history = useHistory();
   const [decks,setDecks] = useState([]);
   //used to rerender whenever a change is made so we dont have to refresh page to get the new data to display on DOM
   const [render,setRender] = useState(false) 
 
   useEffect(()=>{
+    const abortController = new AbortController();
      async function loadDecks(){
       try {
           const response = await listDecks(abortController.signal);
@@ -35,6 +35,7 @@ function Layout() {
   },[render])
 
   const deleteDeckHandler = async (deckId) => {
+      const abortController = new AbortController();
       if (window.confirm("Delete this deck? \n\n\nYou will not be able to recover it")){
       await deleteDeck(deckId,abortController.signal);
       console.log("deleting")

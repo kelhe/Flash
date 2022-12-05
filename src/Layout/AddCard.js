@@ -1,7 +1,8 @@
 import React from "react";
 import {useParams,useHistory,Link} from "react-router-dom"
+import CardForm from "./CardForm";
 
-function AddCard({ deck, handleCardFormChange, handleCardSubmit, newCard, setRender, render }) {
+function AddCard({ deck, handleCardFormChange, handleCardSubmit, cardForm, setRender, render }) {
     const deckId = useParams().deckId
     const history = useHistory()
     const handleDone = () => {
@@ -20,44 +21,7 @@ function AddCard({ deck, handleCardFormChange, handleCardSubmit, newCard, setRen
             </ol>
       </nav>
       <h3>{deck.name}: Add Card</h3>
-      <form
-        onSubmit={handleCardSubmit}
-        className="d-flex flex-column"
-        id="createForm"
-      >
-        <label htmlFor="front" className="d-flex flex-column py-3">
-          Front
-          <textarea
-            className="my-2"
-            id="front"
-            name="front"
-            placeholder="Front side of card"
-            rows={3}
-            onChange={handleCardFormChange}
-            value={newCard.front}
-            required
-          />
-        </label>
-        <label htmlFor="back" className="d-flex flex-column">
-          Back
-          <textarea
-            className="my-2"
-            id="back"
-            name="back"
-            placeholder="Back side of card"
-            rows={3}
-            onChange={handleCardFormChange}
-            value={newCard.back}
-            required
-          />
-        </label>
-        <div>
-          <button onClick={handleDone} className="btn btn-secondary" id="done">
-            Done
-          </button>
-          <button type="submit" className="btn btn-primary mx-1">Save</button>
-        </div>
-      </form>
+      <CardForm handleCardFormChange={handleCardFormChange} handleCardSubmit={handleCardSubmit} cardForm={cardForm} handleDone={handleDone} />
     </div>
   );
 }

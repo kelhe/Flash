@@ -41,7 +41,7 @@ function DecksIdPage({deleteDeckHandler,setRender,render}){
     return () => {
       abortController.abort();
     };
-}, [render]);
+}, [render,deckId]);
 
 //Effect hook so every time deck changes we will change the edit form data
 useEffect(()=>{

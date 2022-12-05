@@ -13,10 +13,10 @@ function CardsPage({ deck, setRender, render}) {
     deckId: deck.id,
 };
 
-const [newCard, setNewCard] = useState(initialCardForm);
-const [editCardForm,setEditCardForm] = useState(initialCardForm);
+const [cardForm, setCardForm] = useState(initialCardForm);
 const [cardToEdit,setCardToEdit] = useState(0);
 const [card,setCard] = useState({})
+const [edit,setEdit] = useState(false);
 //effect hook to load the card we want to edit 
 
 useEffect(() => {
@@ -47,42 +47,41 @@ useEffect(() => {
 useEffect(()=>{
   //if deck exists then set the initial edit form to the deck data 
   if(card.id){
-      setEditCardForm(card)
+      setCardForm(card)
+      setEdit(true)
   }
 },[card])
 
 //handlers for the new card form will pass as props to addcard component
 const handleCardFormChange = ({ target }) => {
-  setNewCard({
-    ...newCard,
-    [target.name]: target.value,
-  });
-};
-
-const handleCardSubmit = async (event) => {
-  event.preventDefault();
-  if(event.target.id === "edit"){
-    await updateCard(editCardForm);
-    setEditCardForm(initialCardForm);
-    setRender(!render)
-    history.push(`/decks/${deck.id}`);
+  console.log(target.parentNode.parentNode.id === "edit")
+  if(target.id === "edit"){
+    setCardForm({
+      ...cardForm,
+      [target.name]: target.value,
+  })
   } else {
-    await createCard(deck.id, newCard);
-    setNewCard(initialCardForm);
+    setCardForm({
+      ...cardForm,
+      [target.name]: target.value,
+    });
   }
 };
 
-//handlers for card edit 
-const handleCardEditChange = ({ target }) => {
-  setEditCardForm({
-      ...editCardForm,
-      [target.name]: target.value,
-  })
+const handleCardSubmit = async (event) => {
+  const abortController = new AbortController();
+  event.preventDefault();
+  if(event.target.id === "edit"){
+    await updateCard(cardForm,abortController.signal);
+    setCardForm(initialCardForm);
+    setEdit(false);
+    setRender(!render);
+    history.push(`/decks/${deck.id}`);
+  } else {
+    await createCard(deck.id, cardForm);
+    setCardForm(initialCardForm);
+  }
 };
-
-
-
-  //edit card handlers
 
   return (
     <Switch>
@@ -91,7 +90,7 @@ const handleCardEditChange = ({ target }) => {
           deck={deck}
           handleCardFormChange={handleCardFormChange}
           handleCardSubmit={handleCardSubmit}
-          newCard={newCard}
+          cardForm={cardForm}
           setRender={setRender}
           render={render}
         />
@@ -100,9 +99,10 @@ const handleCardEditChange = ({ target }) => {
         <EditCard 
           deck={deck}
           setCardToEdit={setCardToEdit} 
-          handleCardEditChange={handleCardEditChange} 
-          editCardForm={editCardForm} 
-          handleCardSubmit={handleCardSubmit}/>
+          handleCardFormChange={handleCardFormChange} 
+          cardForm={cardForm} 
+          handleCardSubmit={handleCardSubmit}
+          edit={edit}/>
       </Route>
     </Switch>
   );

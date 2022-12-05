@@ -1,12 +1,13 @@
 import React,{useEffect} from "react";
 import {Link,useParams} from "react-router-dom"
+import CardForm from "./CardForm";
 
-function EditCard({deck, setCardToEdit, handleCardEditChange, editCardForm, handleCardSubmit}){
+function EditCard({deck, setCardToEdit, handleCardFormChange, cardForm, handleCardSubmit,edit}){
     const {cardId,deckId} = useParams()
     
     useEffect(()=>{
         setCardToEdit(cardId)
-    },[])
+    },[cardId,setCardToEdit])
     
     return (
         <div>
@@ -18,42 +19,7 @@ function EditCard({deck, setCardToEdit, handleCardEditChange, editCardForm, hand
             </ol>
         </nav>
           <h2>Edit Card</h2>
-          <form
-            onSubmit={handleCardSubmit}
-            className="d-flex flex-column"
-            id="edit"
-          >
-            <label htmlFor="front" className="d-flex flex-column py-3">
-              Front
-              <textarea
-                className="my-2"
-                id="front"
-                name="front"
-                placeholder="Front side of card"
-                rows={3}
-                onChange={handleCardEditChange}
-                value={editCardForm.front}
-                required
-              />
-            </label>
-            <label htmlFor="back" className="d-flex flex-column">
-              Back
-              <textarea
-                className="my-2"
-                id="back"
-                name="back"
-                placeholder="Back side of card"
-                rows={3}
-                onChange={handleCardEditChange}
-                value={editCardForm.back}
-                required
-              />
-            </label>
-            <div>
-              <Link to={`/decks/${deckId}`} className="btn btn-secondary">Cancel</Link>
-              <button type="submit" className="btn btn-primary mx-1">Submit</button>
-            </div>
-          </form>
+          <CardForm handleCardFormChange={handleCardFormChange} handleCardSubmit={handleCardSubmit} cardForm={cardForm} edit={edit} />
         </div>
       );
 }
