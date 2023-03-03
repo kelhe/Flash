@@ -2,7 +2,7 @@
 
 For this project, I had to build a React App that uses an API to create, read, update, and delete records stored by the API. 
 
-![Screenshot]()
+![Screenshot]("./flashCards.jpg")
 
 ## Project Details
 
